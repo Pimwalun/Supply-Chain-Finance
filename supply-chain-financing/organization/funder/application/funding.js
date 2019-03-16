@@ -21,7 +21,7 @@ const { FileSystemWallet, Gateway } = require('fabric-network');
 const CommercialPaper = require('../contract/lib/paper.js');
 
 // A wallet stores a collection of identities for use
-const wallet = new FileSystemWallet('../identity/user/buyer/wallet');
+const wallet = new FileSystemWallet('../identity/user/funder/wallet');
 
 // Main program function
 async function main() {
@@ -62,17 +62,17 @@ async function main() {
 
     const contract = await network.getContract('papercontract', 'org.papernet.commercialpaper');
 
-    // payment commercial paper
-    console.log('Submit commercial paper payment transaction.');
+    // funding commercial paper
+    console.log('Submit commercial paper funding transaction.');
 
-    const paymentResponse = await contract.submitTransaction('payment', 'buyer', '00001', 'funder','buyer','300000','2019-20-02' );
+    const fundingResponse = await contract.submitTransaction('funding', 'buyer', '00001', 'funder','supplier','300000','30000','2019-20-02' );
 
     // process response
-    console.log('Process payment transaction response.');
+    console.log('Process statement funding response.');
 
-    let paper = CommercialPaper.fromBuffer(paymentResponse);
+    let paper = CommercialPaper.fromBuffer(fundingResponse);
 
-    console.log(`${paper.issuer} commercial paper : ${paper.paperNumber} successfully payed by ${paper.owner}`);
+    console.log(`${paper.issuer} commercial paper : ${paper.paperNumber} successfully funded by ${paper.owner}`);
     console.log('Transaction complete.');
 
   } catch (error) {
@@ -90,11 +90,11 @@ async function main() {
 }
 main().then(() => {
 
-  console.log('Payment program complete.');
+  console.log('Funding program complete.');
 
 }).catch((e) => {
 
-  console.log('Payment program exception.');
+  console.log('Funding program exception.');
   console.log(e);
   console.log(e.stack);
   process.exit(-1);

@@ -55,7 +55,7 @@ class CommercialPaperContract extends Contract {
         console.log('Instantiate the contract');
     }
 
-    /**
+     /**
      * Issue purchase paper
      *
      * @param {Context} ctx the transaction context

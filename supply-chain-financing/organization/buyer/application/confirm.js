@@ -65,10 +65,10 @@ async function main() {
     // confirm commercial paper
     console.log('Submit commercial paper confirm transaction.');
 
-    const confirmResponse = await contract.submitTransaction('confirm', 'buyer', '00001', 'funder','buyer','Accept','2019-20-02' );
+    const confirmResponse = await contract.submitTransaction('confirm', 'buyer', '00001', 'buyer','funder','Accept','2019-20-02' );
 
     // process response
-    console.log('Process request transaction response.');
+    console.log('Process confirm transaction response.');
 
     let paper = CommercialPaper.fromBuffer(confirmResponse);
 
@@ -90,11 +90,11 @@ async function main() {
 }
 main().then(() => {
 
-  console.log('Request program complete.');
+  console.log('Confirm program complete.');
 
 }).catch((e) => {
 
-  console.log('Request program exception.');
+  console.log('Confirm program exception.');
   console.log(e);
   console.log(e.stack);
   process.exit(-1);

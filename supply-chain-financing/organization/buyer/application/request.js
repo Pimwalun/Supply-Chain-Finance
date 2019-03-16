@@ -65,7 +65,7 @@ async function main() {
     // request commercial paper
     console.log('Submit commercial paper request transaction.');
 
-    const requestResponse = await contract.submitTransaction('request', 'buyer', '00001', 'supplier','buyer','300000','2019-20-02' );
+    const requestResponse = await contract.submitTransaction('request', 'buyer', '00001', 'buyer','funder','300000','2019-20-02' );
 
     // process response
     console.log('Process request transaction response.');

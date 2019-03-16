@@ -21,7 +21,7 @@ const { FileSystemWallet, Gateway } = require('fabric-network');
 const CommercialPaper = require('../contract/lib/paper.js');
 
 // A wallet stores a collection of identities for use
-const wallet = new FileSystemWallet('../identity/user/balaji/wallet');
+const wallet = new FileSystemWallet('../identity/user/buyer/wallet');
 
 // Main program function
 async function main() {
@@ -44,6 +44,7 @@ async function main() {
       identity: userName,
       wallet: wallet,
       discovery: { enabled:false, asLocalhost: true }
+
     };
 
     // Connect to gateway using application specified parameters
@@ -61,17 +62,17 @@ async function main() {
 
     const contract = await network.getContract('papercontract', 'org.papernet.commercialpaper');
 
-    // redeem commercial paper
-    console.log('Submit commercial paper redeem transaction.');
+    // payment commercial paper
+    console.log('Submit commercial paper payment transaction.');
 
-    const redeemResponse = await contract.submitTransaction('redeem', 'MagnetoCorp', '00001', 'DigiBank', '2020-11-30');
+    const paymentResponse = await contract.submitTransaction('payment', 'buyer', '00001', 'funder','buyer','300000','2019-20-02' );
 
     // process response
-    console.log('Process redeem transaction response.');
+    console.log('Process payment transaction response.');
 
-    let paper = CommercialPaper.fromBuffer(redeemResponse);
+    let paper = CommercialPaper.fromBuffer(paymentResponse);
 
-    console.log(`${paper.issuer} commercial paper : ${paper.paperNumber} successfully redeemed with ${paper.owner}`);
+    console.log(`${paper.issuer} commercial paper : ${paper.paperNumber} successfully payed by ${paper.owner}`);
     console.log('Transaction complete.');
 
   } catch (error) {
@@ -89,11 +90,11 @@ async function main() {
 }
 main().then(() => {
 
-  console.log('Redeem program complete.');
+  console.log('Request program complete.');
 
 }).catch((e) => {
 
-  console.log('Redeem program exception.');
+  console.log('Request program exception.');
   console.log(e);
   console.log(e.stack);
   process.exit(-1);

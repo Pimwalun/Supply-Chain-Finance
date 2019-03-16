@@ -21,7 +21,7 @@ const { FileSystemWallet, Gateway } = require('fabric-network');
 const CommercialPaper = require('../contract/lib/paper.js');
 
 // A wallet stores a collection of identities for use
-const wallet = new FileSystemWallet('../identity/user/balaji/wallet');
+const wallet = new FileSystemWallet('../identity/user/buyer/wallet');
 
 // Main program function
 async function main() {
@@ -62,15 +62,15 @@ async function main() {
 
     const contract = await network.getContract('papercontract', 'org.papernet.commercialpaper');
 
-    // buy commercial paper
-    console.log('Submit commercial paper buy transaction.');
+    // purchase commercial paper
+    console.log('Submit commercial paper purchase transaction.');
 
-    const buyResponse = await contract.submitTransaction('buy', 'MagnetoCorp', '00001', 'MagnetoCorp', 'DigiBank', '4900000', '2020-05-31');
+    const purchaeResponse = await contract.submitTransaction('purchase', 'buyer', '00001', '2019-20-02', '10000');
 
     // process response
-    console.log('Process buy transaction response.');
+    console.log('Process purchase transaction response.');
 
-    let paper = CommercialPaper.fromBuffer(buyResponse);
+    let paper = CommercialPaper.fromBuffer(purchaeResponse);
 
     console.log(`${paper.issuer} commercial paper : ${paper.paperNumber} successfully purchased by ${paper.owner}`);
     console.log('Transaction complete.');
@@ -90,11 +90,11 @@ async function main() {
 }
 main().then(() => {
 
-  console.log('Buy program complete.');
+  console.log('Purchase program complete.');
 
 }).catch((e) => {
 
-  console.log('Buy program exception.');
+  console.log('Purchase program exception.');
   console.log(e);
   console.log(e.stack);
   process.exit(-1);

@@ -36,17 +36,22 @@
 #### Instantiate contract
 > $ docker exec cliImporter peer chaincode instantiate -n papercontract -v 0 -l node -c '{"Args":["org.papernet.commercialpaper:instantiate"]}' -C mychannel -P "AND ('Org1MSP.member')"
 
-#### Application
+## Application
 > $ cd ../../application <br>
 > $ npm install
 **add identity information to wallet**
 > $ node addToWallet.js
 
 **application list**
-1. ISSUED
-2. APPROVED
-3. CONFIRMED
-4. ADD_SHIPPING
-5. SHIPPING_CONFIRMED
-6. PAID_TO_ADVISORING
-7. PAID_TO_ISSUING
+1. issue a L/C paper: .../issuingbank/application/**issue.js**
+2. approve the L/C paper: .../advisoringbank/application/**approve.js**
+3. confirm the L/C paper: .../exporter/aplication/**confirm.js**
+4. add shipping document to the paper: .../exporter/application/**addShipping.js**
+5. confirm shipping document: .../advisoringbank/application/**confirmShipping.js**
+6. pay to AdvisoringBank for shipping document: .../issuingbank/application/**paid.js**
+7. pay to IssuingBank for shipping document: .../importer/application/**paid.js**
+
+command to invode application
+> $ node <filename>.js
+for example, use issue.js to submit a L/C paper
+> $ node issue.js

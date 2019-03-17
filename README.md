@@ -1,69 +1,60 @@
 # Supply chain financing block chain
+### Author
+- 5910545019	Vittunyuta Maeprasart
+- 5910545639	Kanchanok Kannee
+- 5910546686	Pinwalun Witchawanitchanun
+- 5910545655	Jiranan Patrathamakul
 
-Implementing paper net from hyperledger fabric example into supply chain financing process, by allowing funder, supplier, and buyer have their own ledger.
+## Letter of Credit
+A Letter of Credit is a method of payment and an important part of international trade. Both the buyer and seller rely on the security of banks to ensure that payment is received and goods are provided. In a Letter of Credit transaction, the goods are consigned to the order of the issuing bank, meaning that the bank will not release control of the goods until the buyer has either paid or undertaken to pay the bank for the documents.
 
-## Available function in smart contact
+## Procudures and transaction states
 
-Including
+![Blockchain States](https://github.com/Pimwalun/Supply-Chain-Finance/blob/master/Blockchain_States.png)
 
-Purchase , Invoice , Request , Statement , Confirm , Funding , Status , Collect , Payment -> according to the flow of the transaction
+**states**
+1. ISSUED: After Importer request IssuingBank to open letter of credit, IssuingBank issue a L/C paper to the blockchain.
+2. APPROVED: AdvisoringBank approve the L/C paper.
+3. CONFIRMED: Exporter confirm the L/C paper.
+4. ADD_SHIPPING: Exporter ships goods and add a shipping documents to the L/C paper.
+5. SHIPPING_CONFIRMED: AdvisoringBank review the shipping document and confirm it.
+6. PAID_TO_ADVISORING: After the shipping document is confirmed and entire transaction is reviewed, IssuingBank pay to AdvisoringBank for shipping document.
+7. PAID_TO_ISSUING: Importer pay to IssuingBank for shipping document and use it to get the goods.
 
-## Usage
+## Steps of installing
+#### Create network
+> $ cd fabric-samples/basic-network <br>
+> $ ./start.sh
 
-Setting up the fabric by
+#### Working as Importer
+> $ cd organization/importer/configuration/cli <br>
+> $ ./monitordocker.sh net_basic <br>
+> $ docker-compose -f docker-compose.yml up -d cliImporter <br>
 
-``
-cd ./basic-network
-``
+#### Install Contract
+> $ docker exec cliImporter peer chaincode install -n papercontract -v 0 -p /opt/gopath/src/github.com/contract -l node <br>
 
-``
-./start.sh
-``
+#### Instantiate contract
+> $ docker exec cliImporter peer chaincode instantiate -n papercontract -v 0 -l node -c '{"Args":["org.papernet.commercialpaper:instantiate"]}' -C mychannel -P "AND ('Org1MSP.member')"
 
-Start Command line interface for supplier, buyer, and funder
+## Application
+> $ cd ../../application <br>
+> $ npm install <br>
 
-``
-cd ./supply-chain-financing/organization/{funder/buyer/supplier}/configuration/cli/
-``
+**add identity information to wallet**
+> $ node addToWallet.js <br>
 
-``
-docker-compose -f docker-compose.yml up -d {cliBuyer/cliFunder/cliSupplier}
-``
+**application list**
+1. issue a L/C paper: .../issuingbank/application/**issue.js**
+2. approve the L/C paper: .../advisoringbank/application/**approve.js**
+3. confirm the L/C paper: .../exporter/aplication/**confirm.js**
+4. add shipping document to the paper: .../exporter/application/**addShipping.js**
+5. confirm shipping document: .../advisoringbank/application/**confirmShipping.js**
+6. pay to AdvisoringBank for shipping document: .../issuingbank/application/**paid.js**
+7. pay to IssuingBank for shipping document: .../importer/application/**paid.js**
 
-Install paper contact to chain code (you need to install it to every cli)
-
-``
-cd ./supply-chain-financing/organization/{funder/buyer/supplier}/contract/lib/
-``
-
-``
-docker exec {cliBuyer/cliFunder/cliSupplier} peer chaincode install -n papercontract -v 0 -p /opt/gopath/src/github.com/contract -l node
-``
-
-``
-docker exec {cliBuyer/cliFunder/cliSupplier} peer chaincode instantiate -n papercontract -v 0 -l node -c '{"Args":["org.papernet.commercialpaper:instantiate"]}' -C mychannel -P "AND ('Org1MSP.member')"
-``
-
-Open the application directory (3 folder)
-
-``
-cd ./supply-chain-financing/organization/{funder/buyer/supplier}/application/
-``
-
-``
-npm install
-``
-
-``
-node <function>.js
-``
-
-## Member
-
-Tharit Pongsaneh
-
-Archawin Trirugsapun
-
-Patcharapol Nirunpornphutta
-
-Sirasath Piyapootinun
+command to invoke application
+> $ node 'filename'.js <br>
+  
+for example, use issue.js to submit a L/C paper
+> $ node issue.js <br>

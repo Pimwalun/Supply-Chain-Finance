@@ -7,6 +7,7 @@
 
 ## Letter of Credit
 A Letter of Credit is a method of payment and an important part of international trade. Both the buyer and seller rely on the security of banks to ensure that payment is received and goods are provided. In a Letter of Credit transaction, the goods are consigned to the order of the issuing bank, meaning that the bank will not release control of the goods until the buyer has either paid or undertaken to pay the bank for the documents.
+![letter of credit](https://github.com/Pimwalun/Supply-Chain-Finance/blob/master/Letter_of_Credit.png)
 
 ## Procudures and transaction states
 

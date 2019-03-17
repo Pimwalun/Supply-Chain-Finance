@@ -21,7 +21,7 @@ const { FileSystemWallet, Gateway } = require('fabric-network');
 const CommercialPaper = require('../contract/lib/paper.js');
 
 // A wallet stores a collection of identities for use
-const wallet = new FileSystemWallet('../identity/user/importer/wallet');
+const wallet = new FileSystemWallet('../identity/user/advisoringbank/wallet');
 
 // Main program function
 async function main() {
@@ -62,19 +62,19 @@ async function main() {
 
         const contract = await network.getContract('papercontract', 'org.papernet.commercialpaper');
 
-        // approve commercial paper
-        console.log('Submit commercial paper approve transaction.');
+        // confirmShipping commercial paper
+        console.log('Submit commercial paper confirm Shipping transaction.');
 
-        const purchaeResponse = await contract.submitTransaction('approve', 'IssuingBank', '00001', 'IssuingBank', '2019-20-02');
+        const purchaeResponse = await contract.submitTransaction('confirmedShipping', 'IssuingBank', '00001', 'Exporter', 'AdvisoringBank','2019-20-02');
 
 
         // process response
-        console.log('Process approve transaction response.');
+        console.log('Process confirm Shipping transaction response.');
 
         let paper = CommercialPaper.fromBuffer(purchaeResponse);
 
 
-        console.log(`${paper.issuer} commercial paper : ${paper.paperNumber} successfully approved by ${paper.owner}`);
+        console.log(`${paper.issuer} commercial paper : ${paper.paperNumber} successfully confirm Shipping by ${paper.owner}`);
         console.log('Transaction complete.');
 
     } catch (error) {
@@ -93,11 +93,11 @@ async function main() {
 main().then(() => {
 
 
-    console.log('Approve program complete.');
+    console.log('Confirm Shipping program complete.');
 
 }).catch((e) => {
 
-    console.log('Approve program exception.');
+    console.log('Confirm Shipping program exception.');
     console.log(e);
     console.log(e.stack);
     process.exit(-1);

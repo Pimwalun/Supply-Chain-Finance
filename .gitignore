@@ -1,5 +1,20 @@
-supply-chain-financing/organization/importer/application/node_modules/
-supply-chain-financing/organization/importer/contract/node_modules/
-supply-chain-financing/organization/importer/identity/user/
+# Importer
+letter-of-credit/organization/importer/application/node_modules/
+letter-of-credit/organization/importer/contract/node_modules/
+letter-of-credit/organization/importer/identity/user/
+# IssuingBank
+letter-of-credit/organization/issuingbank/application/node_modules/
+letter-of-credit/organization/issuingbank/contract/node_modules/
+letter-of-credit/organization/issuingbank/identity/user/
+# AdvisoringBank
+letter-of-credit/organization/advisoringbank/application/node_modules/
+letter-of-credit/organization/advisoringbank/contract/node_modules/
+letter-of-credit/organization/advisoringbank/identity/user/
+# Exporter
+letter-of-credit/organization/exporter/application/node_modules/
+letter-of-credit/organization/exporter/contract/node_modules/
+letter-of-credit/organization/exporter/identity/user/
+
 package-lock.json
 .vscode
+.DS_Store

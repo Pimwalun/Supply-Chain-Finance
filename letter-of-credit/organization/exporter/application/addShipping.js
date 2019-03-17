@@ -21,7 +21,7 @@ const { FileSystemWallet, Gateway } = require('fabric-network');
 const CommercialPaper = require('../contract/lib/paper.js');
 
 // A wallet stores a collection of identities for use
-const wallet = new FileSystemWallet('../identity/user/importer/wallet');
+const wallet = new FileSystemWallet('../identity/user/exporter/wallet');
 
 // Main program function
 async function main() {
@@ -62,17 +62,19 @@ async function main() {
 
         const contract = await network.getContract('papercontract', 'org.papernet.commercialpaper');
 
-        // issue commercial paper
-        console.log('Submit commercial paper issue transaction.');
+        // addShipping commercial paper
+        console.log('Submit commercial paper add Shipping transaction.');
 
-        const issueResponse = await contract.submitTransaction('issue', 'IssuingBank', '00001', '2019-20-02', '10000');
+        const purchaeResponse = await contract.submitTransaction('addShipping', 'IssuingBank', '00001', 'IssuingBank', 'Exporter', 'Shipping doc as text example', '2019-20-02');
+
 
         // process response
-        console.log('Process issue transaction response.');
+        console.log('Process add Shipping transaction response.');
 
-        let paper = CommercialPaper.fromBuffer(issueResponse);
+        let paper = CommercialPaper.fromBuffer(purchaeResponse);
 
-        console.log(`${paper.issuer} commercial paper : ${paper.paperNumber} successfully issued by ${paper.owner}`);
+
+        console.log(`${paper.issuer} commercial paper : ${paper.paperNumber} successfully added Shipping by ${paper.owner}`);
         console.log('Transaction complete.');
 
     } catch (error) {
@@ -91,11 +93,11 @@ async function main() {
 main().then(() => {
 
 
-    console.log('Issue program complete.');
+    console.log('Add Shipping program complete.');
 
 }).catch((e) => {
 
-    console.log('Issue program exception.');
+    console.log('Add Shipping program exception.');
     console.log(e);
     console.log(e.stack);
     process.exit(-1);

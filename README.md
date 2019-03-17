@@ -1,69 +1,24 @@
 # Supply chain financing block chain
+### Author
+5910545019	Vittunyuta Maeprasart
+5910545639	Kanchanok Kannee
+5910546686	Pinwalun Witchawanitchanun
+5910545655	Jiranan Patrathamakul
 
-Implementing paper net from hyperledger fabric example into supply chain financing process, by allowing funder, supplier, and buyer have their own ledger.
+## Letter of Credit
 
-## Available function in smart contact
+## Steps of installing
+### Create network
+> $ cd fabric-samples/basic-network <br>
+> $ ./start.sh
 
-Including
+### Working as Importer
+> $ cd organization/importer/configuration/cli <br>
+> $ ./monitordocker.sh net_basic <br>
+> $ docker-compose -f docker-compose.yml up -d cliImporter <br>
 
-Purchase , Invoice , Request , Statement , Confirm , Funding , Status , Collect , Payment -> according to the flow of the transaction
+### Install Contract
+> docker exec cliImporter peer chaincode install -n papercontract -v 0 -p /opt/gopath/src/github.com/contract -l node <br>
 
-## Usage
+## Overall procudures and transaction states
 
-Setting up the fabric by
-
-``
-cd ./basic-network
-``
-
-``
-./start.sh
-``
-
-Start Command line interface for supplier, buyer, and funder
-
-``
-cd ./supply-chain-financing/organization/{funder/buyer/supplier}/configuration/cli/
-``
-
-``
-docker-compose -f docker-compose.yml up -d {cliBuyer/cliFunder/cliSupplier}
-``
-
-Install paper contact to chain code (you need to install it to every cli)
-
-``
-cd ./supply-chain-financing/organization/{funder/buyer/supplier}/contract/lib/
-``
-
-``
-docker exec {cliBuyer/cliFunder/cliSupplier} peer chaincode install -n papercontract -v 0 -p /opt/gopath/src/github.com/contract -l node
-``
-
-``
-docker exec {cliBuyer/cliFunder/cliSupplier} peer chaincode instantiate -n papercontract -v 0 -l node -c '{"Args":["org.papernet.commercialpaper:instantiate"]}' -C mychannel -P "AND ('Org1MSP.member')"
-``
-
-Open the application directory (3 folder)
-
-``
-cd ./supply-chain-financing/organization/{funder/buyer/supplier}/application/
-``
-
-``
-npm install
-``
-
-``
-node <function>.js
-``
-
-## Member
-
-Tharit Pongsaneh
-
-Archawin Trirugsapun
-
-Patcharapol Nirunpornphutta
-
-Sirasath Piyapootinun

@@ -6,10 +6,11 @@
 - 5910545655	Jiranan Patrathamakul
 
 ## Letter of Credit
+A Letter of Credit is a method of payment and an important part of international trade. Both the buyer and seller rely on the security of banks to ensure that payment is received and goods are provided. In a Letter of Credit transaction, the goods are consigned to the order of the issuing bank, meaning that the bank will not release control of the goods until the buyer has either paid or undertaken to pay the bank for the documents.
 
 ## Procudures and transaction states
 
-<mai picture>
+![Blockchain States](https://github.com/Pimwalun/Supply-Chain-Finance/blob/master/Blockchain_States.png)
 
 **states**
 1. ISSUED: After Importer request IssuingBank to open letter of credit, IssuingBank issue a L/C paper to the blockchain.

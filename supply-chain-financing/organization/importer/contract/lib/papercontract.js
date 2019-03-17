@@ -61,20 +61,19 @@ class CommercialPaperContract extends Contract {
      * @param {Context} ctx the transaction context
      * @param {String} issuer company issuer
      * @param {Integer} paperNumber paper number for this issuer
-     * @param {String} newOwner owner of paper
      * @param {String} issueDateTime paper issue date
-     * @param {Integer} quantity face value of paper
+     * @param {Integer} value face value of paper
      */
-    async purchase(ctx, issuer, paperNumber, newOwner ,issueDateTime, quantity) {
+    async issue(ctx, issuer, paperNumber, issueDateTime, value) {
 
         // create an instance of the paper
-        let paper = CommercialPaper.createInstance(issuer, paperNumber, issueDateTime, quantity);
+        let paper = CommercialPaper.createInstance(issuer, paperNumber, issueDateTime, value);
 
         // Smart contract, rather than paper, moves paper into PURCHASE state
         paper.setPurchase();
 
         // Newly issued paper is owned by the newOwner
-        paper.setOwner(newOwner);
+        paper.setOwner(issuer);
 
         // Add the paper to the list of all similar commercial papers in the ledger world state
         await ctx.paperList.addPaper(paper);
@@ -89,12 +88,9 @@ class CommercialPaperContract extends Contract {
      * @param {Context} ctx the transaction context
      * @param {String} issuer commercial paper issuer
      * @param {Integer} paperNumber paper number for this issuer
-     * @param {String} currentOwner current owner of paper
-     * @param {String} newOwner new owner of paper
-     * @param {Integer} price price requested for this paper
-     * @param {String} invoiceDateTime time paper was purchased (i.e. traded)
+     * @param {String} approvedDateTime time paper was purchased (i.e. traded)
      */
-    async invoice(ctx, issuer, paperNumber, currentOwner, newOwner, price, invoiceDateTime) {
+    async approve(ctx, issuer, paperNumber, currentOwner, approvedDateTime) {
 
         // Retrieve the current paper using key fields provided
         let paperKey = CommercialPaper.makeKey([issuer, paperNumber]);
@@ -102,19 +98,14 @@ class CommercialPaperContract extends Contract {
 
         // Validate current owner
         if (paper.getOwner() !== currentOwner) {
-            throw new Error('Paper ' + issuer + paperNumber + ' is not owned by ' + currentOwner);
+            throw new Error('Letter of Credit ' + issuer + paperNumber + ' is not owned by ' + currentOwner);
         }
 
         // First buy moves state from PURCHASE to INVOICE
-        if (paper.isPurchase()) {
-            paper.setInvoice();
-        }
-
-        // Check paper is not already REQUEST
-        if (paper.isInvoice()) {
-            paper.setOwner(newOwner);
-        } else {
-            throw new Error('Paper ' + issuer + paperNumber + ' is not invoice. Current state = ' + cp.getCurrentState());
+        if (paper.isIssued()) {
+            paper.setApproved();
+        }else {
+            throw new Error('Letter of Credit ' + issuer + paperNumber + ' is not approved. Current state = ' + cp.getCurrentState());
         }
 
         // Update the paper
@@ -129,11 +120,9 @@ class CommercialPaperContract extends Contract {
      * @param {String} issuer commercial paper issuer
      * @param {Integer} paperNumber paper number for this issuer
      * @param {String} currentOwner current owner of paper
-     * @param {String} newOwner new owner of paper
-     * @param {Integer} amount price requested for this paper
-     * @param {String} requestDateTime time paper was request (i.e. traded)
+     * @param {String} confirmDateTime time paper was request (i.e. traded)
      */
-    async request(ctx, issuer, paperNumber, currentOwner, newOwner, amount, requestDateTime) {
+    async confirm(ctx, issuer, paperNumber, currentOwner, confirmDateTime) {
 
         // Retrieve the current paper using key fields provided
         let paperKey = CommercialPaper.makeKey([issuer, paperNumber]);
@@ -141,19 +130,14 @@ class CommercialPaperContract extends Contract {
 
         // Validate current owner
         if (paper.getOwner() !== currentOwner) {
-            throw new Error('Paper ' + issuer + paperNumber + ' is not owned by ' + currentOwner);
+            throw new Error('Letter of Credit ' + issuer + paperNumber + ' is not owned by ' + currentOwner);
         }
 
         // First buy moves state from INVOICE to REQUEST
-        if (paper.isInvoice()) {
-            paper.setRequest();
-        }
-
-        // Check paper is not already STATEMENT
-        if (paper.isRequest()) {
-            paper.setOwner(newOwner);
-        } else {
-            throw new Error('Paper ' + issuer + paperNumber + ' is not request. Current state = ' + cp.getCurrentState());
+        if (paper.isApproved()) {
+            paper.setConfirmed();
+        }else {
+            throw new Error('Letter of Credit ' + issuer + paperNumber + ' is not confirmed. Current state = ' + cp.getCurrentState());
         }
 
         // Update the paper
@@ -169,10 +153,10 @@ class CommercialPaperContract extends Contract {
      * @param {Integer} paperNumber paper number for this issuer
      * @param {String} currentOwner current owner of paper
      * @param {String} newOwner new owner of paper
-     * @param {Integer} statement price requested for this paper
-     * @param {String} statementDateTime time paper was stated (i.e. traded)
+     * @param {String} shippingDoc price requested for this paper
+     * @param {String} statementDateTime time paper was added shipping (i.e. traded)
      */
-    async statement(ctx, issuer, paperNumber, currentOwner, newOwner, statement, statementDateTime) {
+    async addShipping(ctx, issuer, paperNumber, currentOwner, newOwner, shippingDoc, addShippingDateTime) {
 
         // Retrieve the current paper using key fields provided
         let paperKey = CommercialPaper.makeKey([issuer, paperNumber]);
@@ -180,19 +164,19 @@ class CommercialPaperContract extends Contract {
 
         // Validate current owner
         if (paper.getOwner() !== currentOwner) {
-            throw new Error('Paper ' + issuer + paperNumber + ' is not owned by ' + currentOwner);
+            throw new Error('Letter of Credit ' + issuer + paperNumber + ' is not owned by ' + currentOwner);
         }
 
         // First buy moves state from REQUEST to STATEMENT
-        if (paper.isRequest()) {
-            paper.setStatement();
+        if (paper.isConfirmed()) {
+            paper.setAddShipping();
         }
 
         // Check paper is not already CONFIRM
-        if (paper.isStatement()) {
+        if (paper.isAddShipping()) {
             paper.setOwner(newOwner);
         } else {
-            throw new Error('Paper ' + issuer + paperNumber + ' is not statement. Current state = ' + cp.getCurrentState());
+            throw new Error('Letter of Credit ' + issuer + paperNumber + ' is not added. Current state = ' + cp.getCurrentState());
         }
 
         // Update the paper
@@ -208,10 +192,9 @@ class CommercialPaperContract extends Contract {
      * @param {Integer} paperNumber paper number for this issuer
      * @param {String} currentOwner current owner of paper
      * @param {String} newOwner new owner of paper
-     * @param {String} confirm confirmation of this paper
-     * @param {String} confirmDateTime time paper was confirm (i.e. traded)
+     * @param {String} confirmedShippingDateTime time paper was confirm (i.e. traded)
      */
-    async confirm(ctx, issuer, paperNumber, currentOwner, newOwner, confirm, confirmDateTime) {
+    async confirmedShipping(ctx, issuer, paperNumber, currentOwner, newOwner, confirmedShippingDateTime) {
 
         // Retrieve the current paper using key fields provided
         let paperKey = CommercialPaper.makeKey([issuer, paperNumber]);
@@ -219,19 +202,19 @@ class CommercialPaperContract extends Contract {
 
         // Validate current owner
         if (paper.getOwner() !== currentOwner) {
-            throw new Error('Paper ' + issuer + paperNumber + ' is not owned by ' + currentOwner);
+            throw new Error('Letter of Credit ' + issuer + paperNumber + ' is not owned by ' + currentOwner);
         }
 
         // First buy moves state from STATEMENT to CONFIRM
-        if (paper.isStatement()) {
-            paper.setConfirm();
+        if (paper.isAddShipping()) {
+            paper.setConfirmedShipping();
         }
 
         // Check paper is not already FUNDING
-        if (paper.isConfirm()) {
+        if (paper.isComfirmedShipping()) {
             paper.setOwner(newOwner);
         } else {
-            throw new Error('Paper ' + issuer + paperNumber + ' is not confirm. Current state = ' + cp.getCurrentState());
+            throw new Error('Letter of Credit ' + issuer + paperNumber + ' is not confirmed. Current state = ' + cp.getCurrentState());
         }
 
         // Update the paper
@@ -247,11 +230,10 @@ class CommercialPaperContract extends Contract {
      * @param {Integer} paperNumber paper number for this issuer
      * @param {String} currentOwner current owner of paper
      * @param {String} newOwner new owner of paper
-     * @param {Integer} fund finding amount of this paper
-     * @param {Integer} discount discount amount of this paper
-     * @param {String} fundDateTime time paper was fund (i.e. traded)
+     * @param {Integer} price price paid for this paper
+     * @param {String} paidDateTime time paper was paid (i.e. traded)
      */
-    async funding(ctx, issuer, paperNumber, currentOwner, newOwner, fund, discount, fundDateTime) {
+    async paid(ctx, issuer, paperNumber, currentOwner, newOwner, price, paidDateTime) {
 
         // Retrieve the current paper using key fields provided
         let paperKey = CommercialPaper.makeKey([issuer, paperNumber]);
@@ -259,138 +241,28 @@ class CommercialPaperContract extends Contract {
 
         // Validate current owner
         if (paper.getOwner() !== currentOwner) {
-            throw new Error('Paper ' + issuer + paperNumber + ' is not owned by ' + currentOwner);
+            throw new Error('Letter of Credit ' + issuer + paperNumber + ' is not owned by ' + currentOwner);
         }
 
         // First buy moves state from CONFIRM to FUNDING
-        if (paper.isConfirm()) {
-            paper.setFunding();
+        if (paper.isComfirmedShipping()) {
+            paper.setPaidToAdvising();
+        }
+        if (paper.isPaidToAdvising()) {
+            paper.setPaidToIssuing();
         }
 
         // Check paper is not already STAUTS
-        if (paper.isFunding()) {
+        if (paper.isPaidToAdvising() || paper.isPaidToIssuing()) {
             paper.setOwner(newOwner);
         } else {
-            throw new Error('Paper ' + issuer + paperNumber + ' is not funding. Current state = ' + cp.getCurrentState());
+            throw new Error('Letter of Credit ' + issuer + paperNumber + ' is not paid. Current state = ' + cp.getCurrentState());
         }
 
         // Update the paper
         await ctx.paperList.updatePaper(paper);
         return paper.toBuffer();
     }
-
-    /**
-     * status sending from supplier to funder
-     *
-     * @param {Context} ctx the transaction context
-     * @param {String} issuer commercial paper issuer
-     * @param {Integer} paperNumber paper number for this issuer
-     * @param {String} currentOwner current owner of paper
-     * @param {String} newOwner new owner of paper
-     * @param {String} status status of this paper
-     * @param {String} statusDateTime time paper was fund (i.e. traded)
-     */
-    async status(ctx, issuer, paperNumber, currentOwner, newOwner, status, statusDateTime) {
-
-        // Retrieve the current paper using key fields provided
-        let paperKey = CommercialPaper.makeKey([issuer, paperNumber]);
-        let paper = await ctx.paperList.getPaper(paperKey);
-
-        // Validate current owner
-        if (paper.getOwner() !== currentOwner) {
-            throw new Error('Paper ' + issuer + paperNumber + ' is not owned by ' + currentOwner);
-        }
-
-        // First buy moves state from FUNDING to STATUS
-        if (paper.isFunding()) {
-            paper.setStatus();
-        }
-
-        // Check paper is not already COLLECT
-        if (paper.isStatus()) {
-            paper.setOwner(newOwner);
-        } else {
-            throw new Error('Paper ' + issuer + paperNumber + ' is not status. Current state = ' + cp.getCurrentState());
-        }
-
-        // Update the paper
-        await ctx.paperList.updatePaper(paper);
-        return paper.toBuffer();
-    }
-
-    /**
-     * collect sending from funder to buyer
-     *
-     * @param {Context} ctx the transaction context
-     * @param {String} issuer commercial paper issuer
-     * @param {Integer} paperNumber paper number for this issuer
-     * @param {String} currentOwner current owner of paper
-     * @param {String} newOwner new owner of paper
-     * @param {Integer} collect collect amount of this paper
-     * @param {String} collectDateTime time paper was fund (i.e. traded)
-     */
-    async collect(ctx, issuer, paperNumber, currentOwner, newOwner, collect, collectDateTime) {
-
-        // Retrieve the current paper using key fields provided
-        let paperKey = CommercialPaper.makeKey([issuer, paperNumber]);
-        let paper = await ctx.paperList.getPaper(paperKey);
-
-        // Validate current owner
-        if (paper.getOwner() !== currentOwner) {
-            throw new Error('Paper ' + issuer + paperNumber + ' is not owned by ' + currentOwner);
-        }
-
-        // First buy moves state from STATUS to COLLECT
-        if (paper.isStatus()) {
-            paper.setCollect();
-        }
-
-        // Check paper is not already PAYMENT
-        if (paper.isCollect()) {
-            paper.setOwner(newOwner);
-        } else {
-            throw new Error('Paper ' + issuer + paperNumber + ' is not collect. Current state = ' + cp.getCurrentState());
-        }
-
-        // Update the paper
-        await ctx.paperList.updatePaper(paper);
-        return paper.toBuffer();
-    }
-
-    /**
-     * Payment commercial paper
-     *
-     * @param {Context} ctx the transaction context
-     * @param {String} issuer commercial paper issuer
-     * @param {Integer} paperNumber paper number for this issuer 
-     * @param {String} collectOwner redeeming owner of paper
-     * @param {String} newOwner redeeming owner of paper
-     * @param {Integer} payment payment amount
-     * @param {String} paymentDateTime time paper was redeemed
-     */
-    async payment(ctx, issuer, paperNumber, collectOwner, newOwner,payment, paymentDateTime) {
-
-        let paperKey = CommercialPaper.makeKey([issuer, paperNumber]);
-
-        let paper = await ctx.paperList.getPaper(paperKey);
-
-        // Check paper is not PAYMENT
-        if (paper.isPayment()) {
-            throw new Error('Paper ' + issuer + paperNumber + ' already redeemed');
-        }
-
-        // Verify that the redeemer owns the commercial paper before redeeming it
-        if (paper.getOwner() === collectOwner) {
-            paper.setOwner(newOwner);
-            paper.setPayment();
-        } else {
-            throw new Error('Redeeming owner does not own paper' + issuer + paperNumber);
-        }
-
-        await ctx.paperList.updatePaper(paper);
-        return paper.toBuffer();
-    }
-
 }
 
 module.exports = CommercialPaperContract;

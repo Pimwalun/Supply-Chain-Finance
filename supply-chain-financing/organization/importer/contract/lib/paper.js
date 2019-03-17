@@ -13,10 +13,9 @@ const cpState = {
     APPROVED: 2,
     CONFIRMED: 3,
     ADD_SHIPPING: 4,
-    PAID: 5,
-    PAYMENT_ACCEPTED: 6,
-    PAYMENT_COMFIRMED: 7,
-    MONEY_RECEIVED: 8
+    COMFIRMED_SHIPPING: 5,
+    PAID_TO_ADVISING: 6,
+    PAID_TO_ISSUING: 7
 };
 
 /**
@@ -64,17 +63,14 @@ class CommercialPaper extends State {
     setAddShipping() {
         this.currentState = cpState.ADD_SHIPPING;
     }
-    setPaid() {
-        this.currentState = cpState.PAID;
+    setConfirmedShipping() {
+        this.currentState = cpState.COMFIRMED_SHIPPING;
     }
-    setPaymentAccepted() {
-        this.currentState = cpState.PAYMENT_ACCEPTED;
+    setPaidToAdvising() {
+        this.currentState = cpState.PAID_TO_ADVISING;
     }
-    setPaymentConfirmed() {
-        this.currentState = cpState.PAYMENT_COMFIRMED;
-    }
-    setMoneyReceived() {
-        this.currentState = cpState.MONEY_RECEIVED;
+    setPaidToIssuing() {
+        this.currentState = cpState.PAID_TO_ISSUING;
     }
 
     //Check either state match or not
@@ -90,17 +86,14 @@ class CommercialPaper extends State {
     isAddShipping() {
         return this.currentState === cpState.ADD_SHIPPING;
     }
-    isPaid() {
-        return this.currentState === cpState.PAID;
+    isComfirmedShipping() {
+        return this.currentState === cpState.COMFIRMED_SHIPPING;
     }
-    isPaymentAccepted() {
-        return this.currentState === cpState.PAYMENT_ACCEPTED;
+    isPaidToAdvising() {
+        return this.currentState === cpState.PAID_TO_ADVISING;
     }
-    isPaymentConfirmed() {
-        return this.currentState === cpState.PAYMENT_COMFIRMED;
-    }
-    isMoneyReceived() {
-        return this.currentState === cpState.MONEY_RECEIVED;
+    isPaidToIssuing() {
+        return this.currentState === cpState.PAID_TO_ISSUING;
     }
 
     static fromBuffer(buffer) {

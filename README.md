@@ -38,9 +38,10 @@
 
 ## Application
 > $ cd ../../application <br>
-> $ npm install
+> $ npm install <br>
+
 **add identity information to wallet**
-> $ node addToWallet.js
+> $ node addToWallet.js <br>
 
 **application list**
 1. issue a L/C paper: .../issuingbank/application/**issue.js**
@@ -52,6 +53,7 @@
 7. pay to IssuingBank for shipping document: .../importer/application/**paid.js**
 
 command to invode application
-> $ node <filename>.js
+> $ node <filename>.js <br>
+  
 for example, use issue.js to submit a L/C paper
-> $ node issue.js
+> $ node issue.js <br>

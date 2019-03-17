@@ -11,7 +11,7 @@ networks:
       name: net_basic
 
 services:
-  cliDigiBank:
+  cliSupplier:
     container_name: cliSupplier
     image: hyperledger/fabric-tools
     tty: true

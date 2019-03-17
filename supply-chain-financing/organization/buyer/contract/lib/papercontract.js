@@ -364,24 +364,25 @@ class CommercialPaperContract extends Contract {
      * @param {String} issuer commercial paper issuer
      * @param {Integer} paperNumber paper number for this issuer 
      * @param {String} collectOwner redeeming owner of paper
+     * @param {String} newOwner redeeming owner of paper
      * @param {Integer} payment payment amount
      * @param {String} paymentDateTime time paper was redeemed
      */
-    async payment(ctx, issuer, paperNumber, collectOwner, payment, paymentDateTime) {
+    async payment(ctx, issuer, paperNumber, collectOwner, newOwner,payment, paymentDateTime) {
 
         let paperKey = CommercialPaper.makeKey([issuer, paperNumber]);
 
         let paper = await ctx.paperList.getPaper(paperKey);
 
-        // Check paper is not REDEEMED
-        if (paper.isRedeemed()) {
+        // Check paper is not PAYMENT
+        if (paper.isPayment()) {
             throw new Error('Paper ' + issuer + paperNumber + ' already redeemed');
         }
 
         // Verify that the redeemer owns the commercial paper before redeeming it
         if (paper.getOwner() === collectOwner) {
-            paper.setOwner(paper.getIssuer());
-            paper.setRedeemed();
+            paper.setOwner(newOwner);
+            paper.setPayment();
         } else {
             throw new Error('Redeeming owner does not own paper' + issuer + paperNumber);
         }

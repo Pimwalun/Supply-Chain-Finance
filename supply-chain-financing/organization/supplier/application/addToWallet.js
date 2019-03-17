@@ -12,7 +12,7 @@ const path = require('path');
 const fixtures = path.resolve(__dirname, '../../../../basic-network');
 
 // A wallet stores a collection of identities
-const wallet = new FileSystemWallet('../identity/supplier/buyer/wallet');
+const wallet = new FileSystemWallet('../identity/user/supplier/wallet');
 
 async function main() {
 

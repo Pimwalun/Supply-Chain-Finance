@@ -52,8 +52,8 @@
 6. pay to AdvisoringBank for shipping document: .../issuingbank/application/**paid.js**
 7. pay to IssuingBank for shipping document: .../importer/application/**paid.js**
 
-command to invode application
-> $ node <filename>.js <br>
+command to invoke application
+> $ node 'filename'.js <br>
   
 for example, use issue.js to submit a L/C paper
 > $ node issue.js <br>

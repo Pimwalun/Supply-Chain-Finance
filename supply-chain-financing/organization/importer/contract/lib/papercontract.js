@@ -56,7 +56,7 @@ class CommercialPaperContract extends Contract {
     }
 
     /**
-     * Issue purchase paper
+     * Issue paper
      *
      * @param {Context} ctx the transaction context
      * @param {String} issuer company issuer
@@ -69,7 +69,7 @@ class CommercialPaperContract extends Contract {
         // create an instance of the paper
         let paper = CommercialPaper.createInstance(issuer, paperNumber, issueDateTime, value);
 
-        // Smart contract, rather than paper, moves paper into PURCHASE state
+        // Smart contract, rather than paper, moves paper into issued state
         paper.setIssued();
 
         // Newly issued paper is owned by the newOwner
@@ -83,13 +83,13 @@ class CommercialPaperContract extends Contract {
     }
 
     /**
-     * Purchasing product from supplier
+     * Approve product from supplier
      *
      * @param {Context} ctx the transaction context
      * @param {String} issuer commercial paper issuer
      * @param {Integer} paperNumber paper number for this issuer
      * @param {String} currentOwner current owner of paper
-     * @param {String} approvedDateTime time paper was purchased (i.e. traded)
+     * @param {String} approvedDateTime time paper was approved (i.e. traded)
      */
     async approve(ctx, issuer, paperNumber, currentOwner, approvedDateTime) {
 
@@ -102,7 +102,7 @@ class CommercialPaperContract extends Contract {
             throw new Error('Letter of Credit ' + issuer + paperNumber + ' is not owned by ' + currentOwner);
         }
 
-        // First buy moves state from PURCHASE to INVOICE
+        // First buy moves state from ISSUED to APPROVED
         if (paper.isIssued()) {
             paper.setApproved();
         }else {

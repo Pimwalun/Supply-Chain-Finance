@@ -9,15 +9,14 @@ const State = require('./../ledger-api/state.js');
 
 // Enumerate commercial paper state values
 const cpState = {
-    PURCHASE: 1,
-    INVOICE: 2,
-    REQUEST: 3,
-    STATEMENT: 4,
-    CONFIRM: 5,
-    FUNDING: 6,
-    STATUS: 7,
-    COLLECT: 8,
-    PAYMENT: 9
+    ISSUED: 1,
+    APPROVED: 2,
+    CONFIRMED: 3,
+    ADD_SHIPPING: 4,
+    PAID: 5,
+    PAYMENT_ACCEPTED: 6,
+    PAYMENT_COMFIRMED: 7,
+    MONEY_RECEIVED: 8
 };
 
 /**
@@ -53,61 +52,55 @@ class CommercialPaper extends State {
     /**
      * Useful methods to encapsulate commercial paper states
      */
-    setPurchase() {
-        this.currentState = cpState.PURCHASE;
+    setIssued() {
+        this.currentState = cpState.ISSUED;
     }
-    setInvoice() {
-        this.currentState = cpState.INVOICE;
+    setApproved() {
+        this.currentState = cpState.APPROVED;
     }
-    setRequest() {
-        this.currentState = cpState.REQUEST;
+    setConfirmed() {
+        this.currentState = cpState.CONFIRMED;
     }
-    setStatement() {
-        this.currentState = cpState.STATEMENT;
+    setAddShipping() {
+        this.currentState = cpState.ADD_SHIPPING;
     }
-    setConfirm() {
-        this.currentState = cpState.CONFIRM;
+    setPaid() {
+        this.currentState = cpState.PAID;
     }
-    setFunding() {
-        this.currentState = cpState.FUNDING;
+    setPaymentAccepted() {
+        this.currentState = cpState.PAYMENT_ACCEPTED;
     }
-    setStatus() {
-        this.currentState = cpState.STATUS;
+    setPaymentConfirmed() {
+        this.currentState = cpState.PAYMENT_COMFIRMED;
     }
-    setCollect() {
-        this.currentState = cpState.COLLECT;
-    }
-    setPayment() {
-        this.currentState = cpState.PAYMENT;
+    setMoneyReceived() {
+        this.currentState = cpState.MONEY_RECEIVED;
     }
 
     //Check either state match or not
-    isPurchase() {
-        return this.currentState === cpState.PURCHASE;
+    isIssued() {
+        return this.currentState === cpState.ISSUED;
     }
-    isInvoice() {
-        return this.currentState === cpState.INVOICE;
+    isApproved() {
+        return this.currentState === cpState.APPROVED;
     }
-    isRequest() {
-        return this.currentState === cpState.REQUEST;
+    isConfirmed() {
+        return this.currentState === cpState.CONFIRMED;
     }
-    isStatement() {
-        return this.currentState === cpState.STATEMENT;
+    isAddShipping() {
+        return this.currentState === cpState.ADD_SHIPPING;
     }
-    isConfirm() {
-        return this.currentState === cpState.CONFIRM;
+    isPaid() {
+        return this.currentState === cpState.PAID;
     }
-    isFunding() {
-        return this.currentState === cpState.FUNDING;
+    isPaymentAccepted() {
+        return this.currentState === cpState.PAYMENT_ACCEPTED;
     }
-    isStatus() {
-        return this.currentState === cpState.STATUS;
+    isPaymentConfirmed() {
+        return this.currentState === cpState.PAYMENT_COMFIRMED;
     }
-    isCollect() {
-        return this.currentState === cpState.COLLECT;
-    }
-    isPayment() {
-        return this.currentState === cpState.PAYMENT;
+    isMoneyReceived() {
+        return this.currentState === cpState.MONEY_RECEIVED;
     }
 
     static fromBuffer(buffer) {
@@ -129,12 +122,12 @@ class CommercialPaper extends State {
     /**
      * Factory method to create a commercial paper object
      */
-    static createInstance(issuer, paperNumber, issueDateTime, quantity) {
+    static createInstance(issuer, paperNumber, issueDateTime, value) {
         return new CommercialPaper({
             issuer,
             paperNumber,
             issueDateTime,
-            quantity
+            value
         });
     }
 

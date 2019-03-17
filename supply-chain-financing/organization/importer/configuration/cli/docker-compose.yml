@@ -11,8 +11,8 @@ networks:
       name: net_basic
 
 services:
-  cliBuyer:
-    container_name: cliBuyer
+  cliImporter:
+    container_name: cliImporter
     image: hyperledger/fabric-tools
     tty: true
     environment:
@@ -28,7 +28,7 @@ services:
     command: /bin/bash
     volumes:
         - /var/run/:/host/var/run/
-        - ./../../../../organization/buyer:/opt/gopath/src/github.com/
+        - ./../../../../organization/importer:/opt/gopath/src/github.com/
         - ./../../../../../basic-network/crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/
     networks:
         - basic

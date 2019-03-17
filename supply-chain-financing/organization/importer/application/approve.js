@@ -26,77 +26,77 @@ const wallet = new FileSystemWallet('../identity/user/buyer/wallet');
 // Main program function
 async function main() {
 
-  // A gateway defines the peers used to access Fabric networks
-  const gateway = new Gateway();
+    // A gateway defines the peers used to access Fabric networks
+    const gateway = new Gateway();
 
-  // Main try/catch block
-  try {
+    // Main try/catch block
+    try {
 
-    // Specify userName for network access
-    // const userName = 'isabella.issuer@magnetocorp.com';
-    const userName = 'Admin@org1.example.com';
+        // Specify userName for network access
+        // const userName = 'isabella.issuer@magnetocorp.com';
+        const userName = 'Admin@org1.example.com';
 
-    // Load connection profile; will be used to locate a gateway
-    let connectionProfile = yaml.safeLoad(fs.readFileSync('../gateway/networkConnection.yaml', 'utf8'));
+        // Load connection profile; will be used to locate a gateway
+        let connectionProfile = yaml.safeLoad(fs.readFileSync('../gateway/networkConnection.yaml', 'utf8'));
 
-    // Set connection options; identity and wallet
-    let connectionOptions = {
-      identity: userName,
-      wallet: wallet,
-      discovery: { enabled:false, asLocalhost: true }
+        // Set connection options; identity and wallet
+        let connectionOptions = {
+            identity: userName,
+            wallet: wallet,
+            discovery: { enabled: false, asLocalhost: true }
 
-    };
+        };
 
-    // Connect to gateway using application specified parameters
-    console.log('Connect to Fabric gateway.');
+        // Connect to gateway using application specified parameters
+        console.log('Connect to Fabric gateway.');
 
-    await gateway.connect(connectionProfile, connectionOptions);
+        await gateway.connect(connectionProfile, connectionOptions);
 
-    // Access PaperNet network
-    console.log('Use network channel: mychannel.');
+        // Access PaperNet network
+        console.log('Use network channel: mychannel.');
 
-    const network = await gateway.getNetwork('mychannel');
+        const network = await gateway.getNetwork('mychannel');
 
-    // Get addressability to commercial paper contract
-    console.log('Use org.papernet.commercialpaper smart contract.');
+        // Get addressability to commercial paper contract
+        console.log('Use org.papernet.commercialpaper smart contract.');
 
-    const contract = await network.getContract('papercontract', 'org.papernet.commercialpaper');
+        const contract = await network.getContract('papercontract', 'org.papernet.commercialpaper');
 
-    // purchase commercial paper
-    console.log('Submit commercial paper purchase transaction.');
+        // purchase commercial paper
+        console.log('Submit commercial paper purchase transaction.');
 
-    const purchaeResponse = await contract.submitTransaction('approve', 'IssuingBank', '00001', 'IssuingBank', '2019-20-02');
+        const purchaeResponse = await contract.submitTransaction('approve', 'IssuingBank', '00001', 'IssuingBank', '2019-20-02');
 
-    // process response
-    console.log('Process purchase transaction response.');
+        // process response
+        console.log('Process purchase transaction response.');
 
-    let paper = CommercialPaper.fromBuffer(purchaeResponse);
+        let paper = CommercialPaper.fromBuffer(purchaeResponse);
 
-    console.log(`${paper.issuer} commercial paper : ${paper.paperNumber} successfully purchased by ${paper.owner}`);
-    console.log('Transaction complete.');
+        console.log(`${paper.issuer} commercial paper : ${paper.paperNumber} successfully purchased by ${paper.owner}`);
+        console.log('Transaction complete.');
 
-  } catch (error) {
+    } catch (error) {
 
-    console.log(`Error processing transaction. ${error}`);
-    console.log(error.stack);
+        console.log(`Error processing transaction. ${error}`);
+        console.log(error.stack);
 
-  } finally {
+    } finally {
 
-    // Disconnect from the gateway
-    console.log('Disconnect from Fabric gateway.')
-    gateway.disconnect();
+        // Disconnect from the gateway
+        console.log('Disconnect from Fabric gateway.');
+        gateway.disconnect();
 
-  }
+    }
 }
 main().then(() => {
 
-  console.log('Purchase program complete.');
+    console.log('Purchase program complete.');
 
 }).catch((e) => {
 
-  console.log('Purchase program exception.');
-  console.log(e);
-  console.log(e.stack);
-  process.exit(-1);
+    console.log('Purchase program exception.');
+    console.log(e);
+    console.log(e.stack);
+    process.exit(-1);
 
 });

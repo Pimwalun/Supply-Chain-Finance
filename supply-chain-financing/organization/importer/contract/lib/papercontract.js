@@ -70,7 +70,7 @@ class CommercialPaperContract extends Contract {
         let paper = CommercialPaper.createInstance(issuer, paperNumber, issueDateTime, value);
 
         // Smart contract, rather than paper, moves paper into PURCHASE state
-        paper.setPurchase();
+        paper.setIssued();
 
         // Newly issued paper is owned by the newOwner
         paper.setOwner(issuer);
@@ -88,6 +88,7 @@ class CommercialPaperContract extends Contract {
      * @param {Context} ctx the transaction context
      * @param {String} issuer commercial paper issuer
      * @param {Integer} paperNumber paper number for this issuer
+     * @param {String} currentOwner current owner of paper
      * @param {String} approvedDateTime time paper was purchased (i.e. traded)
      */
     async approve(ctx, issuer, paperNumber, currentOwner, approvedDateTime) {

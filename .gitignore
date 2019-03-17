@@ -1,11 +1,5 @@
-supply-chain-financing/organization/buyer/application/node_modules/
-supply-chain-financing/organization/buyer/contract/node_modules/
-supply-chain-financing/organization/buyer/identity/user/
-supply-chain-financing/organization/supplier/application/node_modules/
-supply-chain-financing/organization/supplier/contract/node_modules/
-supply-chain-financing/organization/supplier/identity/user/
-supply-chain-financing/organization/funder/application/node_modules/
-supply-chain-financing/organization/funder/contract/node_modules/
-supply-chain-financing/organization/funder/identity/user/
+supply-chain-financing/organization/importer/application/node_modules/
+supply-chain-financing/organization/importer/contract/node_modules/
+supply-chain-financing/organization/importer/identity/user/
 package-lock.json
 .vscode

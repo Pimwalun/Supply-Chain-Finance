@@ -15,8 +15,8 @@ A Letter of Credit is a method of payment and an important part of international
 
 #### states
 1. **ISSUED**: After Importer request IssuingBank to open letter of credit, IssuingBank issue a L/C paper to the blockchain. {Owner: IssuingBank} 
-2. **APPROVED**: AdvisoringBank approve the L/C paper. {Owner: IssuingBank} 
-3. **CONFIRMED**: Exporter confirm the L/C paper. {Owner: IssuingBank} 
+2. **APPROVED**: AdvisoringBank approve the L/C paper. {Owner: AdvisoringBank} 
+3. **CONFIRMED**: Exporter confirm the L/C paper. {Owner: Exporter} 
 4. **ADD_SHIPPING**: Exporter ships goods and add a shipping documents to the L/C paper. {Owner: Exporter} 
 5. **CONFIRMED_SHIPPING**: AdvisoringBank review the shipping document and confirm it. {Owner: AdvisoringBank} 
 6. **PAID_TO_ADVISORING**: After the shipping document is confirmed and entire transaction is reviewed, IssuingBank pay to AdvisoringBank for shipping document. {Owner: IssuingBank} 

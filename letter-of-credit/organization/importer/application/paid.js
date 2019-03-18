@@ -7,7 +7,7 @@ SPDX-License-Identifier: Apache-2.0
  * 1. Select an identity from a wallet
  * 2. Connect to network gateway
  * 3. Access PaperNet network
- * 4. Construct request to issue commercial paper
+ * 4. Construct request to paid commercial paper
  * 5. Submit transaction
  * 6. Process response
  */
@@ -65,16 +65,14 @@ async function main() {
         // paid commercial paper
         console.log('Submit commercial paper paid transaction.');
 
-        const purchaeResponse = await contract.submitTransaction('paid', 'IssuingBank', '00001', 'IssuingBank', 'Importer', '1000000', '2019-20-02');
-
+        const paidResponse = await contract.submitTransaction('paid', 'IssuingBank', '00001', 'IssuingBank', 'Importer', '999999', '2019-20-02');
 
         // process response
         console.log('Process paid transaction response.');
 
-        let paper = CommercialPaper.fromBuffer(purchaeResponse);
+        let paper = CommercialPaper.fromBuffer(paidResponse);
 
-
-        console.log(`${paper.issuer} commercial paper : ${paper.paperNumber} successfully paided by ${paper.owner}`);
+        console.log(`${paper.issuer} commercial paper : ${paper.paperNumber} successfully paid by ${paper.owner}`);
         console.log('Transaction complete.');
 
     } catch (error) {
